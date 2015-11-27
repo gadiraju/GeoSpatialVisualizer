@@ -26,6 +26,7 @@ public class Visualizer {
     private final Polygon selectedPolygon;
     private List<Lion> insideLions;
     private List<Pond> insidePonds;
+    private boolean shouldHighlight = true;
 
     public Visualizer(List<Lion> lions, List<Pond> ponds, List<Region> regions) {
         this.lions = lions;
@@ -39,6 +40,7 @@ public class Visualizer {
 
     private void initComponents() {
         JFrame mainMap = new JFrame();
+        mainMap.setLayout(new FlowLayout());
         mainMap.setResizable(false);
 
         mainMap.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -74,6 +76,9 @@ public class Visualizer {
             @Override
             public void mouseClicked(MouseEvent me) {
                 super.mouseClicked(me);
+                if (!shouldHighlight) {
+                    return;
+                }
                 polygons.stream().filter(polygon -> polygon.contains(me.getX(), me.getY())).findFirst().ifPresent(clickedRegion -> {
                     insideLions = lions.stream().filter(lion -> clickedRegion.contains(lion.getX(), lion.getY())).collect(Collectors.toList());
                     insidePonds = ponds.stream().filter(pond -> clickedRegion.contains(pond.getCenterX(), pond.getCenterY())).collect(Collectors.toList());
@@ -83,7 +88,16 @@ public class Visualizer {
         };
         p.addMouseListener(ma);//add listener to panel
         mainMap.add(p);
-
+        JCheckBox checkBox = new JCheckBox("Show lions and ponds in the selected region");
+        checkBox.setBounds(50, 100, 100, 100);
+        checkBox.setSelected(true);
+        checkBox.addChangeListener(e -> {
+            shouldHighlight = ((JCheckBox) (e.getSource())).isSelected();
+            insideLions = new ArrayList<Lion>();
+            insidePonds = new ArrayList<Pond>();
+            p.repaint();
+        });
+        mainMap.add(checkBox);
         mainMap.pack();
         mainMap.setVisible(true);
     }
