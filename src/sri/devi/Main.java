@@ -3,10 +3,12 @@ package sri.devi;
 import oracle.jdbc.driver.OracleDriver;
 import oracle.spatial.geometry.JGeometry;
 import oracle.sql.STRUCT;
+import sri.devi.Frame.Visualizer;
 import sri.devi.model.Lion;
 import sri.devi.model.Pond;
 import sri.devi.model.Region;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.sql.*;
@@ -22,9 +24,7 @@ public class Main {
         List<Pond> ponds = fetchPonds(stmt);
         List<Region> regions = fetchRegions(stmt);
 
-        lions.forEach(System.out::println);
-        ponds.forEach(System.out::println);
-        regions.forEach(System.out::println);
+        SwingUtilities.invokeLater(() -> new Visualizer(lions, ponds, regions));
     }
 
     private static List<Region> fetchRegions(Statement stmt) throws SQLException {
