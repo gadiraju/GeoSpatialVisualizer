@@ -23,7 +23,6 @@ public class Visualizer {
     private final List<Lion> lions;
     private final List<Pond> ponds;
     private final List<Region> regions;
-    private final Polygon selectedPolygon;
     private List<Lion> insideLions;
     private List<Pond> insidePonds;
     private boolean shouldHighlight = true;
@@ -32,7 +31,6 @@ public class Visualizer {
         this.lions = lions;
         this.ponds = ponds;
         this.regions = regions;
-        this.selectedPolygon = null;
         this.insideLions = new ArrayList<Lion>();
         this.insidePonds = new ArrayList<Pond>();
         initComponents();
@@ -42,14 +40,11 @@ public class Visualizer {
         JFrame mainMap = new JFrame();
         mainMap.setLayout(new FlowLayout());
         mainMap.setResizable(false);
-
         mainMap.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
 
         List<Polygon> polygons = regions.stream().map(region -> new Polygon(getXCoordinates(region.getPoints()),
                 getYCoordinates(region.getPoints()),
                 region.getPoints().size())).collect(Collectors.toList());
-
 
         JPanel p = new JPanel() {
             @Override
